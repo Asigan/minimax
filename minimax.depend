@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1615309831 source:d:\session user\documents\prog\problèmes euler\minimax\main.c
+	<stdio.h>
+	<stdlib.h>
+	<limits.h>
+	"main.h"
+
+1615308829 d:\session user\documents\prog\problèmes euler\minimax\main.h
+
