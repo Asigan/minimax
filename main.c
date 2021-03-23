@@ -4,11 +4,15 @@
 #include "main.h"
 int minimax(int* game, int depth, int maximizingPlayer){
     int bestValue = INT_MIN;
-    if(depth<=0 || onlyOnePossibility(game)){
+    int winner = victoryAchieved(game);
+    if(winner!=EMPTY){
+        return winner==CROSS? 10:-10;
+    }
+    if(depth<=0 || onlyOnePossibility(game, 9)){
         int tmp;
         for(int i =0; i<9; i++){
             if(game[i]==EMPTY){
-                tmp = heuristicValue(game, i);
+                tmp = heuristicValue(game, i, maximizingPlayer!=0?CROSS:CIRCLE);
                 if(tmp>bestValue){
                     bestValue = tmp;
                 }
@@ -54,8 +58,29 @@ int* copy(int* tab, int taille){
     }
     return newtab;
 }
-int heuristicValue(int* game, int index){
-    return 0;
+int heuristicValue(int* game, int index, int playerForm){
+    int x = index/3;
+    int y = index - x*3;
+    int val = 0;
+    struct Node n;
+    n.x = x;
+    n.y = y;
+    if(index == 4){
+        val = 5;
+    }
+    game[index] = (playerForm==CROSS)? CIRCLE:CROSS;
+    if(victory(game, n)){
+        val = -10;
+    }
+    game[index] = playerForm;
+    if(victory(game, n)){
+        val = 10;
+    }
+    if(playerForm==CIRCLE) val*=-1;
+    game[index]=EMPTY;
+
+
+    return val;
 }
 int victory(int* game, struct Node lastMove){
     // who made the last move
@@ -100,19 +125,52 @@ int victory(int* game, struct Node lastMove){
     }
     return win;
 }
-int onlyOnePossibility(int* game){
-    return 0;
+int victoryAchieved(int* jeu){
+
+    struct Node n;
+    int res = EMPTY;
+    for(int i=0; i<9; i++){
+
+        if(jeu[i]!=EMPTY){
+            n.x = i/3;
+            n.y = i -n.x*3;
+            if(victory(jeu, n)){
+                res = jeu[i];
+            }
+        }
+    }
+    return res;
+
+}
+int onlyOnePossibility(int* game, int taille){
+    int cmpt = 0;
+    for(int i=0; i<taille; i++){
+        if(game[i]==EMPTY) ++cmpt;
+    }
+    return cmpt==1;
+}
+void displayGrid(int* game, int taille){
+    int dim = sqrt(taille);
+    for(int i=0; i<dim; i++){
+        for(int j = 0; j<dim; j++){
+
+            printf("%c\t", game[i*3+j]==CIRCLE? 'O': (game[i*3+j]==CROSS?'X':' ' ));
+        }
+        printf("\n");
+    }
+
 }
 
 int main()
 {
     int jeu[9] = {CROSS, CIRCLE, CROSS,
-    CROSS, CROSS, CIRCLE,
-    CROSS, CROSS, CROSS};
+    EMPTY, EMPTY, CIRCLE,
+    EMPTY, EMPTY, CROSS};
+    displayGrid(jeu, 9);
     struct Node lastMove;
     lastMove.x = 1;
     lastMove.y = 1;
     victory(jeu, lastMove);
-    printf("victory = %d", victory(jeu, lastMove));
+    printf("victory = %d", minimax(jeu, 5, 0));
     return 0;
 }

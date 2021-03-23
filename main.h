@@ -9,8 +9,8 @@ struct Node{
     int y;
 } Node;
 int minimax(int* game, int depth, int maximizingPlayer);
-int heuristicValue(int* game, int index);
+int heuristicValue(int* game, int index, int playerForm);
 int victory(int* game, struct Node lastMove);
-int onlyOnePossibility(int* game);
-
+int onlyOnePossibility(int* game, int taille);
+void displayGrid(int* game, int taille);
 #endif // MAIN_H_INCLUDED
