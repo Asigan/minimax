@@ -230,7 +230,7 @@ void testConfiguration(int* game, int player){
         player = player==CIRCLE?CROSS:CIRCLE;
         displayGrid(game);
         printf("\nminimax: %d\n", minimax(game, depth, player==CROSS?1:0));
-    }while(!victory(jeu, lastMove) && !gridFull(game));
+    }while(!victory(game, lastMove) && !gridFull(game));
 }
 // some example of combinations
 void config1(){
